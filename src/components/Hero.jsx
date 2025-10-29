@@ -1,43 +1,45 @@
-import { motion } from "framer-motion";
-import { AlertCircle, MapPin, Users } from "lucide-react";
+import React from 'react';
+import { AlertCircle, Navigation } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
+import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="pointer-events-none absolute -top-32 right-[-10%] h-[420px] w-[420px] rounded-full bg-fuchsia-400/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-[-10%] h-[420px] w-[420px] rounded-full bg-indigo-400/30 blur-3xl" />
+        <Spline scene="https://prod.spline.design/9kCv5J7j3d4M9eJ3/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
-      <div className="mx-auto max-w-6xl px-4 py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
-            Next‑gen Women’s Safety Platform
-          </div>
-          <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900">
-            Feel safe, seen and supported — anywhere
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            Real‑time location sharing, smart SOS, and a trusted circle that is always a tap away. Designed for modern life with privacy at its core.
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <button className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-white font-semibold shadow-sm hover:bg-slate-800">
-              <AlertCircle className="h-4 w-4" /> Quick SOS
-            </button>
-            <button className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-slate-900 font-semibold shadow-sm border border-slate-200 hover:bg-slate-50">
-              <MapPin className="h-4 w-4" /> Live Track
-            </button>
-          </div>
-          <div className="mt-6 flex items-center justify-center gap-6 text-sm text-slate-600">
-            <div className="flex items-center gap-2"><Users className="h-4 w-4" /> Trusted Circle</div>
-            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Precise Location</div>
-            <div className="flex items-center gap-2"><AlertCircle className="h-4 w-4" /> Silent Alerts</div>
-          </div>
-        </motion.div>
+
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-white/80 to-white"></div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-gray-900">
+              Feel safer, move freely
+            </h1>
+            <p className="mt-4 text-lg md:text-xl text-gray-600">
+              Safegirl Pro empowers you with real-time tracking, advanced SOS alerts, and trusted contacts — designed for peace of mind wherever you go.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <button className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-pink-600 text-white font-medium shadow-sm hover:bg-pink-700 transition-colors">
+                <AlertCircle className="w-5 h-5" />
+                Quick SOS
+              </button>
+              <button className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-white text-gray-900 border border-black/10 hover:bg-gray-50 transition-colors">
+                <Navigation className="w-5 h-5" />
+                Start Live Track
+              </button>
+            </div>
+            <p className="mt-3 text-xs text-gray-500">
+              One tap can share your live location with trusted contacts and notify nearby responders.
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

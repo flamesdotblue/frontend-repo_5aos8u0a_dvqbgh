@@ -1,73 +1,60 @@
-import { motion } from "framer-motion";
-import { MapPin, ShieldCheck, Bell, Users, Activity, Lock } from "lucide-react";
+import React from 'react';
+import { ShieldCheck, Bell, MapPin, Activity, Lock, Phone } from 'lucide-react';
 
 const features = [
   {
     icon: ShieldCheck,
-    title: "Smart SOS",
-    desc: "Trigger silent or audible SOS with one tap. Auto-calls emergency contacts with live context.",
-    accent: "from-fuchsia-500 to-rose-500",
+    title: 'Panic SOS',
+    desc: 'Instant alert to trusted contacts with your live location and audio snapshot.'
   },
   {
     icon: MapPin,
-    title: "Live Tracking",
-    desc: "Share precise, continuous location with ETA and battery status to your trusted circle.",
-    accent: "from-indigo-500 to-cyan-500",
-  },
-  {
-    icon: Users,
-    title: "Trusted Circle",
-    desc: "Invite friends and family. Proximity alerts and check‑in reminders keep everyone in the loop.",
-    accent: "from-violet-500 to-fuchsia-500",
-  },
-  {
-    icon: Activity,
-    title: "Incident Recording",
-    desc: "Auto‑record audio snippets and securely back them up when SOS is active.",
-    accent: "from-amber-500 to-orange-500",
+    title: 'Live Location',
+    desc: 'Share precise, continuous location updates with ETA and route overview.'
   },
   {
     icon: Bell,
-    title: "Geofenced Alerts",
-    desc: "Get alerts when entering unsafe zones and suggest safer routes instantly.",
-    accent: "from-emerald-500 to-teal-500",
+    title: 'Smart Alerts',
+    desc: 'Auto-escalation, low-battery reminders, and inactivity detection.'
+  },
+  {
+    icon: Activity,
+    title: 'Safety Checks',
+    desc: 'Scheduled check-ins with countdown and auto-SOS on missed confirmations.'
   },
   {
     icon: Lock,
-    title: "Privacy First",
-    desc: "End‑to‑end encrypted sharing with full control over who sees what, and when.",
-    accent: "from-slate-700 to-slate-900",
+    title: 'Privacy First',
+    desc: 'End-to-end encryption for sensitive data and granular sharing controls.'
   },
+  {
+    icon: Phone,
+    title: 'Emergency Dial',
+    desc: 'One-tap calling to local emergency services and hotlines.'
+  }
 ];
 
 export default function Features() {
   return (
-    <section className="py-10 sm:py-16">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-8 sm:mb-12 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Built for real‑world safety
-          </h2>
-          <p className="mt-2 text-slate-600 max-w-2xl mx-auto">
-            A compact, modern toolkit that adapts to your day and gives your circle peace of mind.
-          </p>
+    <section id="features" className="py-16 md:py-24 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Designed for safety, built for speed</h2>
+          <p className="mt-3 text-gray-600">Everything you need to stay connected and protected during commutes, late nights, or new adventures.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {features.map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.4, delay: i * 0.03 }}
-              className="group relative rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm hover:shadow-md"
-            >
-              <div className={`h-10 w-10 rounded-xl bg-gradient-to-br ${f.accent} text-white grid place-items-center shadow`}> 
-                <f.icon className="h-5 w-5" />
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f) => (
+            <div key={f.title} className="group rounded-xl border border-black/10 p-5 bg-white hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-pink-50 text-pink-600">
+                  <f.icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{f.title}</h3>
+                  <p className="mt-1 text-sm text-gray-600">{f.desc}</p>
+                </div>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">{f.title}</h3>
-              <p className="mt-1 text-sm text-slate-600 leading-relaxed">{f.desc}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -1,22 +1,28 @@
-import { Menu, Shield, Settings } from "lucide-react";
+import React from 'react';
+import { Shield, Menu, Settings } from 'lucide-react';
 
 export default function HeaderNav() {
   return (
-    <header className="sticky top-0 z-20 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-slate-100">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/70 border-b border-black/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-indigo-600 grid place-items-center shadow-sm">
-            <Shield className="h-5 w-5 text-white" />
+          <div className="p-2 rounded-lg bg-pink-100 text-pink-600">
+            <Shield className="w-5 h-5" />
           </div>
-          <span className="font-semibold tracking-tight text-slate-900">Safegirl Pro</span>
+          <span className="font-semibold text-lg tracking-tight">Safegirl Pro</span>
         </div>
+        <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600">
+          <a href="#features" className="hover:text-gray-900 transition-colors">Features</a>
+          <a href="#preview" className="hover:text-gray-900 transition-colors">Live Preview</a>
+          <a href="#contact" className="hover:text-gray-900 transition-colors">Contact</a>
+        </nav>
         <div className="flex items-center gap-2">
-          <button className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition">
-            <Settings className="h-4 w-4" />
+          <button className="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-gray-900 text-white text-sm hover:bg-gray-800 transition-colors">
+            <Settings className="w-4 h-4" />
             Settings
           </button>
-          <button className="inline-flex sm:hidden items-center justify-center h-10 w-10 rounded-lg hover:bg-slate-50">
-            <Menu className="h-5 w-5 text-slate-700" />
+          <button className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-md border border-black/10 text-gray-700 hover:bg-black/5">
+            <Menu className="w-5 h-5" />
           </button>
         </div>
       </div>
