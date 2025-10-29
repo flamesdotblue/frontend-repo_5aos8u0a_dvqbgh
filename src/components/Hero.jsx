@@ -2,7 +2,28 @@ import { memo, useMemo } from 'react';
 import { ArrowRight, AlertTriangle } from 'lucide-react';
 import Spline from '@splinetool/react-spline';
 
-const Hero = memo(function Hero() {
+function StaticVisual() {
+  return (
+    <div className="absolute inset-0">
+      <div className="h-full w-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-pink-100 via-white to-white" />
+      <svg className="absolute inset-0 w-full h-full opacity-40" aria-hidden>
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor="#ec4899" />
+            <stop offset="100%" stopColor="#f97316" />
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#g)" strokeWidth="0.6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <circle key={i} cx="50%" cy="0" r={80 + i * 60} />
+          ))}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+const Hero = memo(function Hero({ lite = false }) {
   const prefersReducedMotion = useMemo(
     () =>
       typeof window !== 'undefined' &&
@@ -11,17 +32,22 @@ const Hero = memo(function Hero() {
     []
   );
 
+  const useLite = lite || prefersReducedMotion;
+
   return (
     <section className="relative overflow-clip min-h-[100svh]">
       <div
         className="absolute inset-0"
         style={{ transform: 'translateZ(0)', willChange: 'transform', contain: 'strict' }}
       >
-        {/* 3D scene kept lightweight and hardware-accelerated */}
-        <Spline
-          scene="https://prod.spline.design/0qjYtbpwQohb6mXu/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
-        />
+        {useLite ? (
+          <StaticVisual />
+        ) : (
+          <Spline
+            scene="https://prod.spline.design/0qjYtbpwQohb6mXu/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
+          />
+        )}
       </div>
 
       {/* gradient overlay without blocking interactions */}
