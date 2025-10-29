@@ -22,7 +22,7 @@ export default function App() {
 
 function FallbackHero() {
   return (
-    <section className="relative overflow-hidden min-h-[70vh]">
+    <section className="relative overflow-clip min-h-[100svh]">
       <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-white pointer-events-none" />
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-20">
         <div className="max-w-2xl animate-pulse">
