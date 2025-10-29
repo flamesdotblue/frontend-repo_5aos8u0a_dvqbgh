@@ -1,110 +1,48 @@
-import { useState } from 'react'
-import HeaderNav from './components/HeaderNav'
-import Hero from './components/Hero'
-import Features from './components/Features'
-import LivePreview from './components/LivePreview'
+import { Suspense, lazy } from 'react';
+import HeaderNav from './components/HeaderNav.jsx';
+import Features from './components/Features.jsx';
+import LivePreview from './components/LivePreview.jsx';
 
-function App() {
-  const [token, setToken] = useState(localStorage.getItem('sgp_token') || '')
-  const [sessionId, setSessionId] = useState('')
-  const baseUrl = import.meta.env.VITE_BACKEND_URL || ''
+// Lazy-load the heavy hero (contains Spline) to improve first paint
+const Hero = lazy(() => import('./components/Hero.jsx'));
 
-  const withAuthHeaders = (headers = {}) => ({
-    ...headers,
-    Authorization: token ? `Bearer ${token}` : '',
-    'Content-Type': 'application/json',
-  })
-
-  const handleSignup = async (name, email, password) => {
-    const res = await fetch(`${baseUrl}/auth/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password }),
-    })
-    if (!res.ok) throw new Error('Signup failed')
-    const data = await res.json()
-    localStorage.setItem('sgp_token', data.token)
-    setToken(data.token)
-    return data
-  }
-
-  const handleLogin = async (email, password) => {
-    const res = await fetch(`${baseUrl}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    if (!res.ok) throw new Error('Login failed')
-    const data = await res.json()
-    localStorage.setItem('sgp_token', data.token)
-    setToken(data.token)
-    return data
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('sgp_token')
-    setToken('')
-    setSessionId('')
-  }
-
-  const triggerQuickSOS = async (coords) => {
-    const res = await fetch(`${baseUrl}/sos`, {
-      method: 'POST',
-      headers: withAuthHeaders(),
-      body: JSON.stringify({
-        latitude: coords?.latitude,
-        longitude: coords?.longitude,
-        message: 'Quick SOS triggered from app',
-      }),
-    })
-    if (!res.ok) throw new Error('SOS failed')
-    return res.json()
-  }
-
-  const startLiveTracking = async () => {
-    const res = await fetch(`${baseUrl}/track/start`, {
-      method: 'POST',
-      headers: withAuthHeaders(),
-      body: JSON.stringify({}),
-    })
-    if (!res.ok) throw new Error('Start tracking failed')
-    const data = await res.json()
-    setSessionId(data.session_id)
-    return data
-  }
-
-  const stopLiveTracking = async () => {
-    if (!sessionId) return
-    const res = await fetch(`${baseUrl}/track/stop`, {
-      method: 'POST',
-      headers: withAuthHeaders(),
-      body: JSON.stringify({ session_id: sessionId }),
-    })
-    if (!res.ok) throw new Error('Stop tracking failed')
-    setSessionId('')
-  }
-
+export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-rose-50 text-slate-900">
-      <HeaderNav onLogin={handleLogin} onSignup={handleSignup} onLogout={handleLogout} isAuthed={!!token} />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Hero
-          isAuthed={!!token}
-          onQuickSos={triggerQuickSOS}
-          onStartTrack={startLiveTracking}
-        />
-        <Features />
-        <LivePreview
-          baseUrl={baseUrl}
-          token={token}
-          sessionId={sessionId}
-          onStart={startLiveTracking}
-          onStop={stopLiveTracking}
-        />
-      </main>
-      <footer className="text-center py-8 text-sm text-slate-500">© {new Date().getFullYear()} Safegirl Pro</footer>
+    <div className="min-h-screen bg-white text-gray-900">
+      <HeaderNav />
+      <Suspense fallback={<FallbackHero />}> 
+        <Hero />
+      </Suspense>
+      <Features />
+      <LivePreview />
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+function FallbackHero() {
+  return (
+    <section className="relative overflow-hidden min-h-[70vh]">
+      <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-white pointer-events-none" />
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-20">
+        <div className="max-w-2xl animate-pulse">
+          <div className="h-9 w-40 rounded-lg bg-gray-200" />
+          <div className="mt-4 h-6 w-3/4 rounded bg-gray-200" />
+          <div className="mt-2 h-6 w-1/2 rounded bg-gray-200" />
+          <div className="mt-6 h-10 w-64 rounded-lg bg-gray-200" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="py-10 border-t border-black/5 bg-white">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-sm text-gray-600">© {new Date().getFullYear()} Safegirl Pro. All rights reserved.</p>
+        <div className="text-xs text-gray-500">Built with performance-first patterns.</div>
+      </div>
+    </footer>
+  );
+}

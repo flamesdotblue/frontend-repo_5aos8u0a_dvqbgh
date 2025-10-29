@@ -1,61 +1,45 @@
-import Spline from '@splinetool/react-spline'
-import { MapPin, Send } from 'lucide-react'
+import { memo, useMemo } from 'react';
+import { ArrowRight, AlertTriangle } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
 
-export default function Hero({ isAuthed, onQuickSos, onStartTrack }) {
-  const quickSOS = async () => {
-    if (!isAuthed) {
-      alert('Please log in first')
-      return
-    }
-    let coords
-    try {
-      coords = await new Promise((resolve, reject) => {
-        if (!navigator.geolocation) return resolve(null)
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve(pos.coords),
-          () => resolve(null),
-          { enableHighAccuracy: true, timeout: 5000 }
-        )
-      })
-    } catch {}
-    try {
-      const res = await onQuickSos(coords)
-      alert('SOS sent')
-    } catch (e) {
-      alert('Failed to send SOS')
-    }
-  }
-
-  const startTrack = async () => {
-    if (!isAuthed) {
-      alert('Please log in first')
-      return
-    }
-    try {
-      await onStartTrack()
-    } catch (e) {
-      alert('Failed to start tracking')
-    }
-  }
+const Hero = memo(function Hero() {
+  const prefersReducedMotion = useMemo(() =>
+    typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  []);
 
   return (
-    <section className="relative w-full h-[420px] rounded-2xl overflow-hidden mt-6">
-      <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/6o4-6hVgQhRmQpIk/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+    <section className="relative overflow-hidden min-h-[80vh]">
+      <div className="absolute inset-0" style={{ transform: 'translateZ(0)' }}>
+        {/* 3D scene kept lightweight and hardware-accelerated */}
+        <Spline scene="https://prod.spline.design/0qjYtbpwQohb6mXu/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/70 via-white/30 to-white/80" />
-      <div className="relative z-10 p-8 sm:p-12 flex flex-col gap-4 max-w-xl">
-        <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Safety, on your terms.</h1>
-        <p className="text-slate-600">Real-time tracking and instant SOS, designed to keep you connected and protected.</p>
-        <div className="flex gap-3 mt-2">
-          <button onClick={quickSOS} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700">
-            <Send className="h-4 w-4" /> Quick SOS
-          </button>
-          <button onClick={startTrack} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50">
-            <MapPin className="h-4 w-4" /> Start Live Track
-          </button>
+
+      {/* gradient overlay without blocking interactions */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/60 via-white/75 to-white" />
+
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-20">
+        <div className="max-w-2xl">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900">
+            Feel safe. Move freely.
+          </h1>
+          <p className="mt-4 text-gray-600 text-base sm:text-lg">
+            Safegirl Pro brings instant SOS, trusted live tracking, and calm design—so help is always a tap away.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <button className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-pink-600 text-white hover:bg-pink-700 active:scale-[.99] transition shadow-sm">
+              <AlertTriangle className="h-4 w-4 mr-2" /> Quick SOS
+            </button>
+            <a href="#live" className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 active:scale-[.99] transition">
+              Start Live Track <ArrowRight className="h-4 w-4 ml-2" />
+            </a>
+          </div>
+          {!prefersReducedMotion && (
+            <p className="mt-3 text-xs text-gray-500">Tip: Allow location access for the best experience.</p>
+          )}
         </div>
       </div>
     </section>
-  )
-}
+  );
+});
+
+export default Hero;

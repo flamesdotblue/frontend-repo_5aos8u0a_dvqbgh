@@ -1,69 +1,63 @@
-import { useState } from 'react'
-import { Shield, Settings, Menu, User, LogOut } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { Shield, Menu, X } from 'lucide-react';
 
-export default function HeaderNav({ onLogin, onSignup, onLogout, isAuthed }) {
-  const [open, setOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
+export default function HeaderNav() {
+  const [open, setOpen] = useState(false);
 
-  const quickLogin = async () => {
-    const email = prompt('Email')
-    const password = prompt('Password')
-    if (!email || !password) return
-    setLoading(true)
-    try {
-      await onLogin(email, password)
-      alert('Logged in')
-    } catch (e) {
-      alert('Login failed')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const quickSignup = async () => {
-    const name = prompt('Name')
-    const email = prompt('Email')
-    const password = prompt('Password (min 4 chars)')
-    if (!name || !email || !password) return
-    setLoading(true)
-    try {
-      await onSignup(name, email, password)
-      alert('Account created and logged in')
-    } catch (e) {
-      alert('Signup failed')
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-20 backdrop-blur bg-white/70 border-b border-rose-100">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Shield className="h-6 w-6 text-rose-600" />
-          <span className="font-semibold">Safegirl Pro</span>
-        </div>
+    <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/70 border-b border-black/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {!isAuthed ? (
-            <>
-              <button onClick={quickSignup} className="px-3 py-1.5 rounded-md bg-rose-600 text-white text-sm hover:bg-rose-700 disabled:opacity-50" disabled={loading}>
-                Sign up
-              </button>
-              <button onClick={quickLogin} className="px-3 py-1.5 rounded-md border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50" disabled={loading}>
-                Log in
-              </button>
-            </>
-          ) : (
-            <button onClick={onLogout} className="px-3 py-1.5 rounded-md border border-slate-300 text-sm hover:bg-slate-50 flex items-center gap-1">
-              <LogOut className="h-4 w-4" /> Logout
-            </button>
-          )}
-          <Settings className="h-5 w-5 text-slate-500 hidden sm:block" />
-          <button onClick={() => setOpen(!open)} className="sm:hidden">
-            <Menu className="h-6 w-6" />
+          <div className="h-9 w-9 rounded-xl bg-pink-600 text-white flex items-center justify-center shadow-sm">
+            <Shield className="h-5 w-5" />
+          </div>
+          <span className="font-semibold tracking-tight">Safegirl Pro</span>
+        </div>
+        <nav className="hidden md:flex items-center gap-1">
+          {[
+            { label: 'Home', href: '#' },
+            { label: 'Features', href: '#features' },
+            { label: 'Live', href: '#live' },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="px-3 py-2 rounded-lg text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <button className="hidden sm:inline-flex px-3 py-2 rounded-lg text-sm border border-gray-200 hover:bg-gray-50 active:scale-[.99] transition">
+            Log in
+          </button>
+          <button className="inline-flex px-3 py-2 rounded-lg text-sm bg-pink-600 text-white hover:bg-pink-700 active:scale-[.99] transition shadow-sm">
+            Get Started
+          </button>
+          <button className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg hover:bg-gray-100" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
+
+      {open && (
+        <div className="md:hidden border-t border-black/5 bg-white">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-1">
+            <a href="#" className="px-3 py-2 rounded-lg text-sm hover:bg-gray-50">Home</a>
+            <a href="#features" className="px-3 py-2 rounded-lg text-sm hover:bg-gray-50">Features</a>
+            <a href="#live" className="px-3 py-2 rounded-lg text-sm hover:bg-gray-50">Live</a>
+          </div>
+        </div>
+      )}
     </header>
-  )
+  );
 }
