@@ -8,7 +8,7 @@ export default function HeaderNav() {
           <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-fuchsia-500 to-indigo-600 grid place-items-center shadow-sm">
             <Shield className="h-5 w-5 text-white" />
           </div>
-          <span className="font-semibold tracking-tight text-slate-900">Aegis</span>
+          <span className="font-semibold tracking-tight text-slate-900">Safegirl Pro</span>
         </div>
         <div className="flex items-center gap-2">
           <button className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition">
