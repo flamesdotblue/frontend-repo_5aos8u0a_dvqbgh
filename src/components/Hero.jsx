@@ -1,46 +1,61 @@
-import React from 'react';
-import { AlertCircle, Navigation } from 'lucide-react';
-import Spline from '@splinetool/react-spline';
-import { motion } from 'framer-motion';
+import Spline from '@splinetool/react-spline'
+import { MapPin, Send } from 'lucide-react'
 
-export default function Hero() {
+export default function Hero({ isAuthed, onQuickSos, onStartTrack }) {
+  const quickSOS = async () => {
+    if (!isAuthed) {
+      alert('Please log in first')
+      return
+    }
+    let coords
+    try {
+      coords = await new Promise((resolve, reject) => {
+        if (!navigator.geolocation) return resolve(null)
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve(pos.coords),
+          () => resolve(null),
+          { enableHighAccuracy: true, timeout: 5000 }
+        )
+      })
+    } catch {}
+    try {
+      const res = await onQuickSos(coords)
+      alert('SOS sent')
+    } catch (e) {
+      alert('Failed to send SOS')
+    }
+  }
+
+  const startTrack = async () => {
+    if (!isAuthed) {
+      alert('Please log in first')
+      return
+    }
+    try {
+      await onStartTrack()
+    } catch (e) {
+      alert('Failed to start tracking')
+    }
+  }
+
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative w-full h-[420px] rounded-2xl overflow-hidden mt-6">
       <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/9kCv5J7j3d4M9eJ3/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+        <Spline scene="https://prod.spline.design/6o4-6hVgQhRmQpIk/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
-
-      <div className="relative">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/70 via-white/80 to-white"></div>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-gray-900">
-              Feel safer, move freely
-            </h1>
-            <p className="mt-4 text-lg md:text-xl text-gray-600">
-              Safegirl Pro empowers you with real-time tracking, advanced SOS alerts, and trusted contacts — designed for peace of mind wherever you go.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <button className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-pink-600 text-white font-medium shadow-sm hover:bg-pink-700 transition-colors">
-                <AlertCircle className="w-5 h-5" />
-                Quick SOS
-              </button>
-              <button className="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-white text-gray-900 border border-black/10 hover:bg-gray-50 transition-colors">
-                <Navigation className="w-5 h-5" />
-                Start Live Track
-              </button>
-            </div>
-            <p className="mt-3 text-xs text-gray-500">
-              One tap can share your live location with trusted contacts and notify nearby responders.
-            </p>
-          </motion.div>
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/70 via-white/30 to-white/80" />
+      <div className="relative z-10 p-8 sm:p-12 flex flex-col gap-4 max-w-xl">
+        <h1 className="text-3xl sm:text-5xl font-bold leading-tight">Safety, on your terms.</h1>
+        <p className="text-slate-600">Real-time tracking and instant SOS, designed to keep you connected and protected.</p>
+        <div className="flex gap-3 mt-2">
+          <button onClick={quickSOS} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 text-white hover:bg-rose-700">
+            <Send className="h-4 w-4" /> Quick SOS
+          </button>
+          <button onClick={startTrack} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-50">
+            <MapPin className="h-4 w-4" /> Start Live Track
+          </button>
         </div>
       </div>
     </section>
-  );
+  )
 }
